@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Closet App</title>
+    <style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: white; /* Set background color to white */
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+h2 {
+    margin-bottom: 10px;
+}
+
+.clothing-container {
+    margin-bottom: 5vh; /* Add margin between clothing items based on viewport height */
+    display: flex; /* Set display to flex */
+    align-items: center; /* Center align items vertically */
+    max-width: 90%; /* Limit the width of the clothing container */
+}
+
+.clothing-container img {
+    border-radius: 4px;
+    margin-right: 10px; /* Add some space between images */
+}
+
+
+
+#hatImage {
+    max-width: 100px; /* Adjust the size of the hat image */
+    height: auto;
+}
+
+#topImage {
+    max-width: 300px; /* Adjust the size of the shirt image */
+    height: auto;
+}
+
+#bottomImage {
+    max-width: 200px; /* Adjust the size of the pants image */
+    height: auto;
+}
+
+#shoesImage {
+    max-width: 100px; /* Adjust the size of the shoes image */
+    height: auto;
+}
+
+.clothing-container {
+    margin-bottom: 20px; /* Add margin between clothing items */
+    display: flex; /* Set display to flex */
+    align-items: center; /* Center align items vertically */
+}
+
+.clothing-container img {
+    border-radius: 4px;
+    margin-right: 10px; /* Add some space between images */
+}
+
+.button-container {
+    display: flex; /* Set display to flex */
+    justify-content: center; /* Center align items horizontally */
+    margin-top: 5vh; /* Add margin to separate clothing from buttons based on viewport height */
+    max-width: 90%; /* Limit the width of the button container */
+}
+
+.button-container button {
+    padding: 10px;
+    border: none;
+    background-color: transparent;
+    color: #4CAF50;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    margin: 0 5px; /* Add some space between buttons */
+}
+
+.button-container button:hover {
+    color: #45a049;
+}
+
+.prev-button {
+    margin-right: auto; /* Push button to the left */
+}
+
+.next-button {
+    margin-left: auto; /* Push button to the right */
+}
+
+#outfitCanvas {
+            display: none; /* Hide the canvas initially */
+        }
+
+        /* Adjustments for the buttons container */
+        .bottom-buttons {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            display: flex;
+            justify-content: space-between;
+            max-width: 600px; /* Limit the maximum width of the buttons container */
+        }
+
+    </style>
+</head>
+
+<body onload="randomizeOutfit()">
+
+<div class="clothing-container">
+    <button class="prev-button" onclick="prevHat()">&#10094;</button>
+    <img id="hatImage" src="" alt="Hat">
+    <button class="next-button" onclick="nextHat()">&#10095;</button>
+</div>
+
+<div class="clothing-container">
+    <button class="prev-button" onclick="prevTop()">&#10094;</button>
+    <img id="topImage" src="" alt="Top">
+    <button class="next-button" onclick="nextTop()">&#10095;</button>
+</div>
+
+<div class="clothing-container">
+    <button class="prev-button" onclick="prevBottom()">&#10094;</button>
+    <img id="bottomImage" src="" alt="Bottom">
+    <button class="next-button" onclick="nextBottom()">&#10095;</button>
+</div>
+
+<div class="clothing-container">
+    <button class="prev-button" onclick="prevShoes()">&#10094;</button>
+    <img id="shoesImage" src="" alt="Shoes">
+    <button class="next-button" onclick="nextShoes()">&#10095;</button>
+</div>
+
+<!-- Adjusted button container -->
+<div class="bottom-buttons">
+    <button class="randomize-button" onclick="randomizeOutfit()">Randomize</button>
+    <button onclick="saveOutfit()">Save Outfit</button>
+    <button onclick="exit()">Exit</button>
+</div>
+
+<canvas id="outfitCanvas"></canvas>
+
+
+    
+
+    <script>
+        // Clothing items
+        const tops = ["top1.png", "top2.png", "top3.png", "top4.png", "top5.png", "top6.png", "top7.png", "top8.png", "top9.png", "top10.png"];
+        const bottoms = ["pants1.png", "pants2.png", "pants3.png", "pants4.png", "pants5.png"];
+        const shoes = ["shoes1.png", "shoes2.png","shoes3.png", "shoes4.png", "shoes5.png"];
+        const hats = ["hat1.png", "hat2.png", "hat3.png", "hat4.png", "hat5.png"];
+
+        // Index to track current item
+        let topIndex = 0;
+        let bottomIndex = 0;
+        let shoesIndex = 0;
+        let hatIndex = 0;
+
+        // Update displayed images
+        function updateDisplay() {
+            document.getElementById("hatImage").src ="./images/" + hats[hatIndex];
+            document.getElementById("topImage").src = "./images/" + tops[topIndex];
+            document.getElementById("bottomImage").src = "./images/" + bottoms[bottomIndex];
+            document.getElementById("shoesImage").src = "./images/" + shoes[shoesIndex];
+        }
+
+        // Functions to scroll through items
+        function prevTop() {
+            topIndex = (topIndex - 1 + tops.length) % tops.length;
+            updateDisplay();
+        }
+
+        function nextTop() {
+            topIndex = (topIndex + 1) % tops.length;
+            updateDisplay();
+        }
+
+        function prevBottom() {
+            bottomIndex = (bottomIndex - 1 + bottoms.length) % bottoms.length;
+            updateDisplay();
+        }
+
+        function nextBottom() {
+            bottomIndex = (bottomIndex + 1) % bottoms.length;
+            updateDisplay();
+        }
+
+        function prevShoes() {
+            shoesIndex = (shoesIndex - 1 + shoes.length) % shoes.length;
+            updateDisplay();
+        }
+
+        function nextShoes() {
+            shoesIndex = (shoesIndex + 1) % shoes.length;
+            updateDisplay();
+        }
+
+        function prevHat() {
+            hatIndex = (hatIndex - 1 + hats.length) % hats.length;
+            updateDisplay();
+        }
+
+        function nextHat() {
+            hatIndex = (hatIndex + 1) % hats.length;
+            updateDisplay();
+        }
+
+        function randomizeOutfit() {
+            // Generate random indices for each clothing category
+            const randomHatIndex = Math.floor(Math.random() * hats.length);
+            const randomTopIndex = Math.floor(Math.random() * tops.length);
+            const randomBottomIndex = Math.floor(Math.random() * bottoms.length);
+            const randomShoesIndex = Math.floor(Math.random() * shoes.length);
+            
+            // Update displayed images with the randomly selected items
+            document.getElementById("hatImage").src = "./images/" + hats[randomHatIndex];
+            document.getElementById("topImage").src = "./images/" + tops[randomTopIndex];
+            document.getElementById("bottomImage").src = "./images/" + bottoms[randomBottomIndex];
+            document.getElementById("shoesImage").src = "./images/" + shoes[randomShoesIndex];
+        }
+
+        function saveOutfit() {
+        // Get the canvas element
+        const canvas = document.getElementById("outfitCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Promises for loading images
+        const hatPromise = new Promise((resolve, reject) => {
+            const hatImg = new Image();
+            hatImg.src = document.getElementById("hatImage").src;
+            hatImg.onload = () => resolve(hatImg);
+            hatImg.onerror = reject;
+        });
+
+        const topPromise = new Promise((resolve, reject) => {
+            const topImg = new Image();
+            topImg.src = document.getElementById("topImage").src;
+            topImg.onload = () => resolve(topImg);
+            topImg.onerror = reject;
+        });
+
+        const bottomPromise = new Promise((resolve, reject) => {
+            const bottomImg = new Image();
+            bottomImg.src = document.getElementById("bottomImage").src;
+            bottomImg.onload = () => resolve(bottomImg);
+            bottomImg.onerror = reject;
+        });
+
+        const shoesPromise = new Promise((resolve, reject) => {
+            const shoesImg = new Image();
+            shoesImg.src = document.getElementById("shoesImage").src;
+            shoesImg.onload = () => resolve(shoesImg);
+            shoesImg.onerror = reject;
+        });
+
+        // Wait for all promises to resolve
+        Promise.all([hatPromise, topPromise, bottomPromise, shoesPromise]).then(([hatImg, topImg, bottomImg, shoesImg]) => {
+            // Set canvas size and fill with white background
+            canvas.width = Math.max(hatImg.width, topImg.width, bottomImg.width, shoesImg.width);
+            canvas.height = hatImg.height + topImg.height + bottomImg.height + shoesImg.height;
+            ctx.fillStyle = "#ffffff"; // White background color
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw outfit images onto the canvas
+            let y = 0;
+            ctx.drawImage(hatImg, (canvas.width - hatImg.width) / 2, y);
+            y += hatImg.height;
+            ctx.drawImage(topImg, (canvas.width - topImg.width) / 2, y);
+            y += topImg.height;
+            ctx.drawImage(bottomImg, (canvas.width - bottomImg.width) / 2, y);
+            y += bottomImg.height;
+            ctx.drawImage(shoesImg, (canvas.width - shoesImg.width) / 2, y);
+
+            // Convert canvas content to image and save
+            const outfitImg = canvas.toDataURL("image/png");
+            const saveLink = document.createElement("a");
+            saveLink.href = outfitImg;
+            saveLink.download = "outfit.png"; // Set filename
+            saveLink.click();
+        }).catch(error => {
+            console.error("Error loading images:", error);
+        });
+    }
+        
+
+        
+        function exit() {
+            window.location.href = "index.html"; // Change "index.html" to your actual index page URL
+        }
+
+        // Initial display update
+        updateDisplay();
+    </script>
+</body>
+</html>
